@@ -22,9 +22,10 @@ const URLForm = () => {
     const responses = await Promise.all(
       inputs.map(async ({ url, validity, shortcode }) => {
         try {
+          const validityInMinutes = validity ? parseInt(validity) * 1440 : undefined; 
           const res = await axios.post('http://localhost:8000/shorturls', {
             url,
-            validity: parseInt(validity),
+            validity: validityInMinutes,
             shortcode: shortcode || undefined
           });
           return res.data;
@@ -37,27 +38,62 @@ const URLForm = () => {
   };
 
   return (
-    <div>
+    <div style={{ padding: 24 }}>
       <Grid container spacing={2}>
         {inputs.map((input, i) => (
-          <Grid item xs={12} key={i}>
-            <TextField label="URL" fullWidth onChange={e => handleChange(i, 'url', e.target.value)} />
-            <TextField label="Validity (mins)" onChange={e => handleChange(i, 'validity', e.target.value)} />
-            <TextField label="Shortcode" onChange={e => handleChange(i, 'shortcode', e.target.value)} />
+          <Grid container item spacing={1} key={i}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="URL"
+                fullWidth
+                required
+                value={input.url}
+                onChange={e => handleChange(i, 'url', e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <TextField
+                label="Validity (days)"
+                type="number"
+                fullWidth
+                value={input.validity}
+                onChange={e => handleChange(i, 'validity', e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <TextField
+                label="Shortcode"
+                fullWidth
+                value={input.shortcode}
+                onChange={e => handleChange(i, 'shortcode', e.target.value)}
+              />
+            </Grid>
           </Grid>
         ))}
-        <Button onClick={addInput} disabled={inputs.length >= 5}>Add Another</Button>
-        <Button onClick={handleSubmit}>Shorten URLs</Button>
+        <Grid item xs={12}>
+          <Button onClick={addInput} disabled={inputs.length >= 5} variant="outlined" style={{ marginRight: 8 }}>
+            Add Another
+          </Button>
+          <Button onClick={handleSubmit} variant="contained">
+            Shorten URLs
+          </Button>
+        </Grid>
       </Grid>
-      {results.map((res, idx) => (
-        <div key={idx}>
-          {res.shortlink ? (
-            <p>{res.shortlink} — expires at {res.expiry}</p>
-          ) : (
-            <p style={{ color: 'red' }}>Error: {res.error}</p>
-          )}
-        </div>
-      ))}
+
+      <div style={{ marginTop: 24 }}>
+        {results.map((res, idx) => (
+          <div key={idx}>
+            {res.shortlink ? (
+              <p>
+                <strong>Shortlink:</strong> <a href={res.shortlink} target="_blank" rel="noopener noreferrer">{res.shortlink}</a><br />
+                <strong>Expires at:</strong> {res.expiry}
+              </p>
+            ) : (
+              <p style={{ color: 'red' }}>Error: {res.error}</p>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
