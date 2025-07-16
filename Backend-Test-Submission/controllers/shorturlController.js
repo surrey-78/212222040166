@@ -5,10 +5,11 @@ exports.createShortUrl = (req, res) => {
   const { url, validity = 30, shortcode } = req.body;
 
   if (!url || typeof url !== 'string' || !/^https?:\/\//.test(url)) {
-    return res.status(400).json({ error: 'Invalid URL format.' });
+    return res.status(400).json({ error: 'Invalid URL format. Must start with http:// or https://' });
   }
 
   let code = shortcode || generateShortcode();
+
   if (shortcode && store[shortcode]) {
     return res.status(409).json({ error: 'Custom shortcode already in use.' });
   }
@@ -18,7 +19,8 @@ exports.createShortUrl = (req, res) => {
   }
 
   const now = new Date();
-  const expiry = new Date(now.getTime() + validity * 60000);
+  const expiry = new Date(now.getTime() + parseInt(validity) * 24 * 60 * 60 * 1000);
+
   store[code] = {
     originalUrl: url,
     expiry,
@@ -26,7 +28,7 @@ exports.createShortUrl = (req, res) => {
     clicks: []
   };
 
-  res.status(201).json({
+  return res.status(201).json({
     shortlink: `http://localhost:8000/${code}`,
     expiry: expiry.toISOString()
   });
@@ -36,11 +38,13 @@ exports.redirectToOriginal = (req, res) => {
   const { shortcode } = req.params;
   const data = store[shortcode];
 
-  if (!data) return res.status(404).json({ error: 'Shortcode not found' });
+  if (!data) {
+    return res.status(404).json({ error: 'Shortcode not found.' });
+  }
 
   const now = new Date();
   if (now > new Date(data.expiry)) {
-    return res.status(410).json({ error: 'Link has expired' });
+    return res.status(410).json({ error: 'Link has expired.' });
   }
 
   const referrer = req.get('Referrer') || 'Direct';
@@ -52,16 +56,18 @@ exports.redirectToOriginal = (req, res) => {
     location
   });
 
-  res.redirect(data.originalUrl);
+  return res.redirect(data.originalUrl);
 };
 
 exports.getShortUrlStats = (req, res) => {
   const { shortcode } = req.params;
   const data = store[shortcode];
 
-  if (!data) return res.status(404).json({ error: 'Shortcode not found' });
+  if (!data) {
+    return res.status(404).json({ error: 'Shortcode not found.' });
+  }
 
-  res.json({
+  return res.json({
     shortcode,
     originalUrl: data.originalUrl,
     createdAt: data.createdAt.toISOString(),

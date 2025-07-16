@@ -1,8 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
+import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
+import { ThemeProvider, createTheme, CssBaseline, AppBar, Toolbar, Typography, Box, Button, Container } from '@mui/material';
 import StatsPage from './components/StatsPage';
 import URLForm from './components/URLForm';
+import './App.css';
 
 const darkTheme = createTheme({
   palette: {
@@ -27,14 +28,40 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <div className="App">
-        <Router>
-          <Routes>
-            <Route path="/" element={<URLForm />} />
-            <Route path="/stats" element={<StatsPage />} />
-          </Routes>
-        </Router>
-      </div>
+      <Router>
+        <AppBar position="static" color="primary">
+          <Toolbar>
+            <Typography variant="h6" sx={{ flexGrow: 1 }}>
+              URL Shortener
+            </Typography>
+            <Button
+              color="inherit"
+              component={NavLink}
+              to="/"
+              style={({ isActive }) => ({ fontWeight: isActive ? 'bold' : 'normal' })}
+            >
+              Create URL
+            </Button>
+            <Button
+              color="inherit"
+              component={NavLink}
+              to="/stats"
+              style={({ isActive }) => ({ fontWeight: isActive ? 'bold' : 'normal' })}
+            >
+              Stats
+            </Button>
+          </Toolbar>
+        </AppBar>
+
+        <Container sx={{ mt: 4 }}>
+          <Box display="flex" justifyContent="center">
+            <Routes>
+              <Route path="/" element={<URLForm />} />
+              <Route path="/stats" element={<StatsPage />} />
+            </Routes>
+          </Box>
+        </Container>
+      </Router>
     </ThemeProvider>
   );
 }
