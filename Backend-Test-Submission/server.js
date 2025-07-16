@@ -1,13 +1,11 @@
 const express = require('express');
+const logger = require('./middleware/logger');
+const shortUrlRoutes = require('./routes/shorturl');
+
 const app = express();
-const PORT = process.env.PORT || 5000;
-
 app.use(express.json());
+app.use(logger);
+app.use('/', shortUrlRoutes);
 
-app.get('/', (req, res) => {
-  res.send('Hello from backend!');
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+const PORT = 8000;
+app.listen(PORT, () => console.log(`URL Shortener running at http://localhost:${PORT}`));
