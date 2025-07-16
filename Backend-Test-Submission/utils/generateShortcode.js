@@ -1,9 +1,13 @@
-const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+function generateCode(length = 6) {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
 
-function generateShortcode(length = 6) {
-  return Array.from({ length })
-    .map(() => characters[Math.floor(Math.random() * characters.length)])
-    .join('');
+  while (result.length < length) {
+    const char = chars.charAt(Math.floor(Math.random() * chars.length));
+    result += char;
+  }
+
+  return result;
 }
 
-module.exports = generateShortcode;
+module.exports = generateCode;

@@ -1,15 +1,28 @@
 const express = require('express');
+const cors = require('cors');
 const logger = require('./middleware/logger');
 const shortUrlRoutes = require('./routes/shorturl');
 
 const app = express();
-app.use(express.json());
-app.use(logger);
+const PORT = 8000;
 
-const cors = require('cors');
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
+app.use(express.json());
+
+app.use(logger);
 
 app.use('/', shortUrlRoutes);
 
-const PORT = 8000;
-app.listen(PORT, () => console.log(`URL Shortener running at http://localhost:${PORT}`));
+app.use((req, res) => {
+  res.status(404).json({ error: 'Endpoint not found' });
+});
+
+app.listen(PORT, () => {
+  console.log(`URL Shortener running at http://localhost:${PORT}`);
+});

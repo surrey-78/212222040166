@@ -1,11 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/shorturlController');
+const {
+  createShortURL,
+  getStats,
+  redirectToURL
+} = require('../controllers/shortUrlController');
 
-router.post('/shorturls', controller.createShortUrl);
+router.post('/shorturls', createShortURL);
 
-router.get('/shorturls/:shortcode', controller.getShortUrlStats);
+router.get('/shorturls/:code', getStats);
 
-router.get('/:shortcode', controller.redirectToOriginal);
+router.get('/:code', redirectToURL);
 
 module.exports = router;
