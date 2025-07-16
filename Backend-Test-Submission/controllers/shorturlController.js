@@ -10,8 +10,7 @@ const loadData = () => {
   try {
     const data = fs.readFileSync(filePath, 'utf-8');
     return data ? JSON.parse(data) : {};
-  } catch (err) {
-    console.error('Error reading data file:', err.message);
+  } catch {
     return {};
   }
 };
@@ -19,9 +18,7 @@ const loadData = () => {
 const saveData = (data) => {
   try {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-  } catch (err) {
-    console.error('Error writing data file:', err.message);
-  }
+  } catch {}
 };
 
 exports.createShortURL = (req, res) => {
@@ -59,8 +56,7 @@ exports.createShortURL = (req, res) => {
       shortlink: `http://localhost:8000/${code}`,
       expiry: expiry.toISOString()
     });
-  } catch (err) {
-    console.error('Error in createShortURL:', err.message);
+  } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -81,10 +77,9 @@ exports.getStats = (req, res) => {
       createdAt,
       expiry,
       totalClicks: clicks.length,
-      clicks  
+      clicks
     });
-  } catch (err) {
-    console.error('Error in getStats:', err.message);
+  } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -118,8 +113,7 @@ exports.redirectToURL = (req, res) => {
     saveData(urls);
 
     res.redirect(entry.originalUrl);
-  } catch (err) {
-    console.error('Error in redirectToURL:', err.message);
+  } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
 };

@@ -10,5 +10,43 @@
         "location": "Unknown"
       }
     ]
+  },
+  "exmpl1": {
+    "originalUrl": "https://example.com/very/long/path",
+    "createdAt": "2025-07-16T10:55:54.774Z",
+    "expiry": "2025-07-16T11:40:54.774Z",
+    "clicks": [
+      {
+        "timestamp": "2025-07-16T10:57:35.223Z",
+        "referrer": "Direct",
+        "location": "Unknown"
+      },
+      {
+        "timestamp": "2025-07-16T10:59:38.680Z",
+        "referrer": "Direct",
+        "location": "Unknown"
+      },
+      {
+        "timestamp": "2025-07-16T11:07:04.658Z",
+        "referrer": "Direct",
+        "location": "Unknown"
+      },
+      {
+        "timestamp": "2025-07-16T11:07:09.818Z",
+        "referrer": "Direct",
+        "location": "Unknown"
+      },
+      {
+        "timestamp": "2025-07-16T11:13:48.969Z",
+        "referrer": "Direct",
+        "location": "Unknown"
+      }
+    ]
+  },
+  "pre1234": {
+    "originalUrl": "https://docs.google.com/document/d/1LdKXn0KqmIDSs7ukHxEu2D0wF72HbWYhTCvIP7MLk9k/edit?tab=t.0#heading=h.7zrct5thxdg3",
+    "createdAt": "2025-07-16T11:08:48.018Z",
+    "expiry": "2025-07-23T11:08:48.018Z",
+    "clicks": []
   }
 }
